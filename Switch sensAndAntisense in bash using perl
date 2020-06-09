@@ -1,0 +1,30 @@
+####bash and perl in macOS
+mkdir tempfw
+mkdir temprv
+###adjust to file names
+mv *?_R_forward.wig temprv/
+mv *?_R_reverse.wig tempfw/
+cd tempfw/
+perl -pi -e 's/ -/ /g' P5004_10*
+perl -pi -e 's/_reverse/_forward/g' P5004_10*
+for x in *_reverse.wig; do
+        new=$(echo $x | sed -e 's/\_reverse.wig$/_forward.wig/')
+        mv $x ../$new
+        echo $new
+done
+cd ..
+cd temprv
+perl -pi -e 's/ / -/g' P5004_10* 
+perl -pi -e 's/-type/type/g' P5004_10* 
+perl -pi -e 's/-name/name/g' P5004_10* 
+perl -pi -e 's/-chrom/chrom/g' P5004_10* 
+perl -pi -e 's/-span/span/g' P5004_10*
+perl -pi -e 's/_forward/_reverse/g' P5004_10*
+for x in *_forward.wig; do
+        new=$(echo $x | sed -e 's/\_forward.wig$/_reverse.wig/')
+        mv $x ../$new
+        echo $new
+done
+cd ..
+rm -r tempfw
+rm -r temprv
